@@ -4,7 +4,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 require('dotenv').config();
-//Test commit
+
 setGlobal({
   graphData: {
     nodes: [],
