@@ -8,7 +8,7 @@ export default function Graph() {
   const [selectedNode, setSelectedNode] = useGlobal("selectedNode")
 
   useEffect(()=>{
-    console.log("[selectedNode]", selectedNode)
+    // console.log("[selectedNode]", selectedNode)
   }, [selectedNode])
 
   return (

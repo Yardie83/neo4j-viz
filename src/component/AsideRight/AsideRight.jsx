@@ -14,7 +14,7 @@ export default function AsideRight() {
   const [selectedNode,] = useGlobal("selectedNode")
 
   useEffect(() => {
-    console.log("[selectedNode]", selectedNode);
+    // console.log("[selectedNode]", selectedNode);
   }, [selectedNode]);
 
   return <Wrapper>

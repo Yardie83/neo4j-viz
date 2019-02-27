@@ -4,16 +4,12 @@ var svg;
 var width, height;
 
 export default class NetworkGraph extends React.Component {
-
-//   shouldComponentUpdate(nextProps, nextState) {
-//     console.log(nextProps.data === this.props.data);
-//     console.log(nextProps.data);
-//     console.log(this.props.data);
-//     if (nextProps.data === this.props.data) {
-//       return false;
-// 	}
-//     return true;
-//   }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.data === this.props.data) {
+      return false;
+    }
+    return true;
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.data.nodes.length > 0 && nextProps.data !== this.props.data) {
@@ -24,7 +20,6 @@ export default class NetworkGraph extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.handleResize);
-	console.log("[Mounted]")
     svg = d3.select(".network").append("svg");
 
     if (this.props.data.nodes.length > 0) {
@@ -43,7 +38,8 @@ export default class NetworkGraph extends React.Component {
   }
 
   renderGraph(data) {
-	console.log("[Data]", data);
+	d3.selectAll("svg > *").remove();
+	
     const links = data.links;
     const nodes = data.nodes;
 
