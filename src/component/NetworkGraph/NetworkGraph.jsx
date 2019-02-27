@@ -14,6 +14,7 @@ export default class NetworkGraph extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.data.nodes.length > 0 && nextProps.data !== this.props.data) {
       var data = Object.assign({}, nextProps.data);
+      d3.selectAll("svg > *").remove();
       this.renderGraph(data);
     }
   }
@@ -37,11 +38,13 @@ export default class NetworkGraph extends React.Component {
     height = parseInt(d3.select(".network").style("height"));
   }
 
+  // RENDER GRAPH START -------------------------------------------------------
+
   renderGraph(data) {
-	d3.selectAll("svg > *").remove();
-	
     const links = data.links;
     const nodes = data.nodes;
+
+    const nodeRadius = 8;
 
     width = parseInt(d3.select(".network").style("width"));
     height = parseInt(d3.select(".network").style("height"));
@@ -54,14 +57,26 @@ export default class NetworkGraph extends React.Component {
 
     const simulation = d3
       .forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id(d => d.id))
+      .force(
+        "link",
+        d3
+          .forceLink(links)
+          .id(d => d.id)
+          .distance(50)
+      )
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("forceManyBody", d3.forceManyBody());
+      .force(
+        "collide",
+        d3
+          .forceCollide()
+          .radius(nodeRadius)
+          .strength(1)
+      );
 
     simulation.on("tick", ticked);
 
-    // DRAG -----------------------------------------------------------
+    // DRAG START --------------------------------------------------------
 
     function dragstarted(d) {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -85,18 +100,17 @@ export default class NetworkGraph extends React.Component {
       .on("start", dragstarted)
       .on("drag", dragged)
       .on("end", dragended);
+
     // DRAG END -----------------------------------------------------------
 
-    // ZOOM  --------------------------------------------------------------
-    svg
-      .call(
-        d3
-          .zoom()
-          .scaleExtent([1 / 2, 4])
-          .on("zoom", zoomed)
-      )
-      .attr("width", width)
-      .attr("height", height);
+    // ZOOM START ---------------------------------------------------------
+    svg.call(
+      d3
+        .zoom()
+        .scaleExtent([1 / 2, 4])
+        .on("zoom", zoomed)
+    );
+
     //add encompassing group for the zoom
     var g = svg.append("g");
     function zoomed() {
@@ -105,6 +119,8 @@ export default class NetworkGraph extends React.Component {
 
     // ZOOM END -----------------------------------------------------------
 
+    // NODES & LINKS START -------------------------------------------------
+
     var link = g
       .append("g")
       .attr("class", "links")
@@ -112,8 +128,8 @@ export default class NetworkGraph extends React.Component {
       .data(links)
       .enter()
       .append("line")
-      .attr("stroke", "#999")
-      .attr("stroke-opacity", 0.6);
+      .attr("stroke", "#ffffff")
+      .attr("stroke-opacity", 0.8);
 
     var node = g
       .append("g")
@@ -126,10 +142,11 @@ export default class NetworkGraph extends React.Component {
 
     node
       .append("circle")
-      .attr("r", 10)
-      .attr("stroke", "#413c58")
-      .attr("fill", "#a3cabc")
+      .attr("r", nodeRadius)
+      .attr("stroke", "#ffffff")
       .attr("stroke-width", 1)
+      //   .attr("fill-opacity","0.8")
+      .attr("fill", "#006494")
       .on("click", d => {
         this.props.selectedNode(d.id);
       });
@@ -138,13 +155,16 @@ export default class NetworkGraph extends React.Component {
       .append("text")
       .attr("dx", -10)
       .attr("dy", -20)
-      .attr("font", "3px sans-serif")
+      .style("font", "8px sans-serif")
+      .style("fill", "#ffffff")
       .text(function(d) {
         return d.id;
       })
       .style("cursor", "default");
 
     dragHandler(node);
+
+    // NODES & LINKS END -------------------------------------------------
 
     function ticked() {
       //update circle positions each tick of the simulation
@@ -168,6 +188,8 @@ export default class NetworkGraph extends React.Component {
         });
     }
   }
+
+  // RENDER GRAPH END -------------------------------------------------------
 
   render() {
     return <div width="100%" height="100%" className="network " />;

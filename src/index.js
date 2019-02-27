@@ -10,7 +10,7 @@ setGlobal({
     nodes: [],
     links: []
   }, 
-  selectedNode : 0
+  selectedNode : []
 });
 
 ReactDOM.render(<App />, document.getElementById("root"));
