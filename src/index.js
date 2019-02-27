@@ -9,7 +9,8 @@ setGlobal({
   graphData: {
     nodes: [],
     links: []
-  }
+  }, 
+  selectedNode : 0
 });
 
 ReactDOM.render(<App />, document.getElementById("root"));

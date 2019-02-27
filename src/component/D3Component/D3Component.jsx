@@ -1,9 +1,7 @@
 import * as d3 from "d3";
 
 export default function(svg, width, height, data) {
-  console.log("[Data]", data);
-  console.log("[Data Nodes]", data.nodes);
-  console.log("[Data Links]", data.links);
+
   const links = data.links;
   const nodes = data.nodes;
   const simulation = d3

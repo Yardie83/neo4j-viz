@@ -5,7 +5,7 @@ import Graph from "../Graph/Graph";
 const Content = () => {
 
   return (
-    <StyledWrapper>
+    <StyledWrapper className="content">
       <Graph/>
     </StyledWrapper>
   );
